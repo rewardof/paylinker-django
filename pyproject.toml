@@ -1,0 +1,75 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paylinker-django"
+version = "0.1.0"
+description = "Django integration for paylinker payment SDK"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Tohirbek" }]
+keywords = ["payment", "django", "click", "payme", "uzbekistan"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Topic :: Office/Business :: Financial :: Point-Of-Sale",
+]
+dependencies = [
+    "django>=4.2",
+    "paylinker>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "django-stubs>=5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/tohirbek/paylinker"
+Repository = "https://github.com/tohirbek/paylinker"
+Documentation = "https://github.com/tohirbek/paylinker#readme"
+Issues = "https://github.com/tohirbek/paylinker/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/paylinker_django"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/paylinker_django", "tests", "README.md", "LICENSE"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 99
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
+
+[tool.django-stubs]
+django_settings_module = "tests.settings"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+DJANGO_SETTINGS_MODULE = "tests.settings"
