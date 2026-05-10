@@ -1,6 +1,12 @@
 # paylinker-django
 
-Django integration for [paylinker](https://github.com/tohirbek/paylinker) payment SDK.
+[![PyPI version](https://img.shields.io/pypi/v/paylinker-django.svg)](https://pypi.org/project/paylinker-django/)
+[![Python versions](https://img.shields.io/pypi/pyversions/paylinker-django.svg)](https://pypi.org/project/paylinker-django/)
+[![Django versions](https://img.shields.io/pypi/djversions/paylinker-django.svg)](https://pypi.org/project/paylinker-django/)
+[![License: MIT](https://img.shields.io/pypi/l/paylinker-django.svg)](https://github.com/tohirbek/paylinker-django/blob/main/LICENSE)
+[![Typed](https://img.shields.io/badge/typed-PEP%20561-informational.svg)](https://peps.python.org/pep-0561/)
+
+Django integration for the [paylinker](https://pypi.org/project/paylinker/) payment SDK.
 
 Provides webhook views, provider transaction tracking, and abstract handler
 bases for Click and Payme payment providers in Uzbekistan.
@@ -153,3 +159,54 @@ url = click.generate_payment_url(
     transaction_param=str(order.pk),
 )
 ```
+
+## Building & Publishing
+
+This package uses [Hatchling](https://hatch.pypa.io/) with a single source
+of truth for the version (`src/paylinker_django/__init__.py`).
+
+### Local build
+
+```bash
+pip install -e ".[dev]"
+python -m build              # produces dist/*.whl and dist/*.tar.gz
+twine check --strict dist/*  # validate PyPI metadata
+```
+
+### Release workflow (recommended)
+
+Releases are automated via GitHub Actions using **PyPI Trusted Publishing**
+(no long-lived API tokens). One-time setup on PyPI / TestPyPI:
+add this repo as a trusted publisher for the `paylinker-django` project,
+with workflow `publish.yml` and environments `pypi` / `testpypi`.
+
+Then for each release:
+
+```bash
+# 1. Bump version in src/paylinker_django/__init__.py
+# 2. Update CHANGELOG.md
+git commit -am "release: v0.2.0"
+
+# 3. Tag & push  → triggers TestPyPI publish
+git tag v0.2.0
+git push origin main --tags
+
+# 4. Create a GitHub Release for the tag → triggers real PyPI publish
+gh release create v0.2.0 --notes-from-tag
+```
+
+### Manual publish (fallback)
+
+```bash
+python -m build
+twine upload --repository testpypi dist/*    # TestPyPI
+twine upload dist/*                          # PyPI
+```
+
+### Versioning
+
+Follows [SemVer](https://semver.org/): `MAJOR.MINOR.PATCH`.
+
+## License
+
+MIT

@@ -19,7 +19,7 @@ import logging
 from functools import lru_cache
 from typing import Any
 
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -54,7 +54,7 @@ def _get_click_webhook_handler() -> ClickWebhookHandler:
 
 @csrf_exempt
 @require_POST
-def payme_webhook(request: Any) -> JsonResponse:
+def payme_webhook(request: HttpRequest) -> JsonResponse:
     """Payme JSON-RPC 2.0 endpoint.
 
     Payme requires ALL responses to be HTTP 200. Errors are communicated
@@ -84,7 +84,7 @@ def payme_webhook(request: Any) -> JsonResponse:
 
 @csrf_exempt
 @require_POST
-def click_webhook(request: Any) -> JsonResponse:
+def click_webhook(request: HttpRequest) -> JsonResponse:
     """Click SHOP-API endpoint.
 
     Click sends prepare (action=0) and complete (action=1) requests

@@ -1,35 +1,53 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
 name = "paylinker-django"
-version = "0.1.0"
-description = "Django integration for paylinker payment SDK"
+dynamic = ["version"]
+description = "Django integration for the paylinker payment SDK (Click, Payme)"
 readme = "README.md"
 license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
-authors = [{ name = "Tohirbek" }]
-keywords = ["payment", "django", "click", "payme", "uzbekistan"]
+authors = [{ name = "Tohirbek", email = "turgunovkozimzon30@gmail.com" }]
+maintainers = [{ name = "Tohirbek", email = "turgunovkozimzon30@gmail.com" }]
+keywords = [
+    "payment",
+    "django",
+    "click",
+    "payme",
+    "uzbekistan",
+    "payment-gateway",
+    "fintech",
+    "paylinker",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "Environment :: Web Environment",
     "Framework :: Django",
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
     "Topic :: Office/Business :: Financial :: Point-Of-Sale",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "django>=4.2",
+    "django>=4.2,<6.0",
     "paylinker>=0.1.0",
 ]
 
@@ -40,24 +58,43 @@ dev = [
     "ruff>=0.8",
     "mypy>=1.13",
     "django-stubs>=5.0",
+    "build>=1.2",
+    "twine>=5.1",
 ]
 
 [project.urls]
-Homepage = "https://github.com/tohirbek/paylinker"
-Repository = "https://github.com/tohirbek/paylinker"
-Documentation = "https://github.com/tohirbek/paylinker#readme"
-Issues = "https://github.com/tohirbek/paylinker/issues"
+Homepage = "https://github.com/tohirbek/paylinker-django"
+Repository = "https://github.com/tohirbek/paylinker-django"
+Documentation = "https://github.com/tohirbek/paylinker-django#readme"
+Issues = "https://github.com/tohirbek/paylinker-django/issues"
+Changelog = "https://github.com/tohirbek/paylinker-django/blob/main/CHANGELOG.md"
+"Core SDK" = "https://github.com/tohirbek/paylinker"
+
+# ─── Build configuration ──────────────────────────────────────────────
+
+[tool.hatch.version]
+path = "src/paylinker_django/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/paylinker_django"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/paylinker_django", "tests", "README.md", "LICENSE"]
+include = [
+    "/src/paylinker_django",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+    "/pyproject.toml",
+]
+
+# ─── Tooling ──────────────────────────────────────────────────────────
 
 [tool.ruff]
 target-version = "py310"
 line-length = 99
 src = ["src"]
+extend-exclude = ["dist", "build", ".venv", "**/migrations"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
@@ -66,6 +103,12 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM", "TCH"]
 python_version = "3.10"
 strict = true
 plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
+files = ["src/paylinker_django"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 
 [tool.django-stubs]
 django_settings_module = "tests.settings"
@@ -73,3 +116,4 @@ django_settings_module = "tests.settings"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 DJANGO_SETTINGS_MODULE = "tests.settings"
+addopts = ["-ra", "--strict-markers", "--strict-config"]

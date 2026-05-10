@@ -1,10 +1,50 @@
+# Python
 __pycache__/
 *.py[cod]
-*.egg-info/
+*.pyo
+*.pyd
+.Python
+
+# Distribution / packaging
 dist/
 build/
-.eggs/
+*.egg-info/
 *.egg
-.mypy_cache/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Testing
 .pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+.ruff_cache/
+
+# Hatch / build cache
+.hatch/
+
+# Django
 *.sqlite3
+local_settings.py
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*
