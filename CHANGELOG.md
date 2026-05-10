@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-05-11
+
+### Changed
+- Removed the `django<6.0` upper bound from install requirements.
+  The package now declares `django>=4.2` so installations on projects
+  pinning Django 6.x are no longer blocked by a dependency conflict.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added
@@ -26,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Django admin registration for `ProviderTransaction`.
 - PEP 561 typing (`py.typed`).
 
-[Unreleased]: https://github.com/tohirbek/paylinker-django/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/tohirbek/paylinker-django/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/tohirbek/paylinker-django/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tohirbek/paylinker-django/releases/tag/v0.1.0
