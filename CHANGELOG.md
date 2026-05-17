@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-05-17
+
+### Fixed
+- `DjangoClickOrderValidator.check_duplicate` now only matches completed
+  transactions (`state=1`). Previously it matched prepared-but-not-completed
+  records (`state=0`), causing `_handle_complete` to skip `on_complete`
+  entirely and leave payments permanently pending.
+- `DjangoClickOrderValidator.on_prepare` now uses `get_or_create` instead of
+  `create`, so a resent Prepare request returns the same `prepare_id` without
+  raising `IntegrityError` (the model has a unique constraint on
+  `provider + external_id`).
+
 ## [0.1.1] - 2026-05-11
 
 ### Changed
@@ -33,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Django admin registration for `ProviderTransaction`.
 - PEP 561 typing (`py.typed`).
 
-[Unreleased]: https://github.com/tohirbek/paylinker-django/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/tohirbek/paylinker-django/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/tohirbek/paylinker-django/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/tohirbek/paylinker-django/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tohirbek/paylinker-django/releases/tag/v0.1.0

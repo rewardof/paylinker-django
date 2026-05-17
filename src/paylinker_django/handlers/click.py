@@ -78,9 +78,14 @@ class DjangoClickOrderValidator:
         return self.validate_order(merchant_trans_id, amount)
 
     def check_duplicate(self, click_trans_id: int) -> int | None:
+        # Only completed (state=1) transactions count as duplicates.
+        # A prepared-but-not-yet-completed record (state=0) must NOT be
+        # returned here, otherwise _handle_complete skips on_complete entirely
+        # and the payment stays pending forever.
         existing = ProviderTransaction.objects.filter(
             provider=ProviderTransaction.Provider.CLICK,
             external_id=str(click_trans_id),
+            state=1,
         ).first()
         if existing:
             return existing.pk
@@ -88,17 +93,21 @@ class DjangoClickOrderValidator:
 
     @transaction.atomic
     def on_prepare(self, click_trans_id: int, merchant_trans_id: str, amount: float) -> int:
-        provider_tx = ProviderTransaction.objects.create(
+        # get_or_create handles Click resending the same prepare request
+        # (UniqueConstraint on provider+external_id prevents duplicate rows).
+        provider_tx, created = ProviderTransaction.objects.get_or_create(
             provider=ProviderTransaction.Provider.CLICK,
             external_id=str(click_trans_id),
-            order_id=merchant_trans_id,
-            state=0,  # Prepared
-            amount=int(amount),
+            defaults={
+                "order_id": merchant_trans_id,
+                "state": 0,
+                "amount": int(amount),
+            },
         )
 
         logger.info(
-            "on_prepare: order=%s click_trans_id=%d prepare_id=%d",
-            merchant_trans_id, click_trans_id, provider_tx.pk,
+            "on_prepare: order=%s click_trans_id=%d prepare_id=%d created=%s",
+            merchant_trans_id, click_trans_id, provider_tx.pk, created,
         )
 
         return provider_tx.pk
